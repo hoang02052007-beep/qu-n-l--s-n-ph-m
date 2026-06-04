@@ -8,27 +8,108 @@ Dashboard
 <body class="dashboard-page"></body>
 <div class="dashboard">
 
-    <!-- Header -->
     <div class="dashboard-header">
         <div>
             <h1>📊 Tổng quan</h1>
             <p>Xin chào ! Đây là bảng điều khiển hệ thống.</p>
         </div>
 
-        <button class="add-btn">
+        <button class="add-btn"  onclick="toggleForm()">
             ➕ Thêm sản phẩm
         </button>
+    <div id="addProductForm" style="display:none;">
+
+    <form method="POST" enctype="multipart/form-data">
+
+        <input type="text" name="name" placeholder="Tên sản phẩm">
+
+        <input type="text" name="category" placeholder="Danh mục">
+
+        <input type="number" name="price" placeholder="Giá" step="any">
+
+        <input type="number" name="quantity" placeholder="Số lượng">
+
+        <input type="text" name="code" placeholder="mã sản phẩm">
+
+        <input type="file" name="image">
+
+        <button type="submit">
+            Lưu sản phẩm
+        </button>
+    </form>
+    </div>
+<div id="editForm" style="display:none;">
+
+    <h3>Sửa sản phẩm</h3>
+
+    <form method="POST" action="/update_product" enctype="multipart/form-data">
+
+        <input type="hidden" id="edit_id" name="id">
+
+        <input type="text" id="edit_name" name="name"  placeholder="Tên sản phẩm">
+
+        <input type="text" id="edit_category" name="category" placeholder="Danh mục">
+
+        <input type="number" id="edit_price" name="price" step="any" placeholder="Giá">
+
+        <input type="number" id="edit_quantity" name="quantity" placeholder="Số lượng">
+
+        <input type="text" id="edit_code" name="code" placeholder="mã sản phẩm">
+
+        <input type="file" name="image" >
+
+        <button type="submit">
+            Cập nhật
+        </button>
+
+    </form>
+
+</div>
+
+    </form>
+
+</div>
     </div>
 
-    <!-- Thanh tìm kiếm -->
     <div class="top-search">
+
+    <form method="GET" action="/dashboard">
+
         <input
             type="text"
-            placeholder="🔍 Tìm sản phẩm nhanh..."
+            name="keyword"
+            placeholder="🔍 Tìm sản phẩm..."
+            value="{{ keyword }}"
         >
-    </div>
 
-    <!-- Thống kê -->
+        <button type="submit">
+            Tìm
+        </button>
+
+    </form>
+
+</div>
+<form method="GET" action="/dashboard">
+
+    <select name="category">
+
+        <option value="">
+            Tất cả danh mục
+        </option>
+
+        {% for c in categories %}
+        <option value="{{ c[0] }}">
+            {{ c[0] }}
+        </option>
+        {% endfor %}
+
+    </select>
+
+    <button type="submit">
+        Lọc
+    </button>
+
+</form>
     <div class="cards">
 
         <div class="card-box">
@@ -38,21 +119,20 @@ Dashboard
 
         <div class="card-box">
             <h2>{{ total_category}}</h2>
-            <p>Danh Mục</p>
+            <p> Tổng Danh Mục</p>
+        </div>
+        <div class="card-box">
+            <h2>{{ total_quantity}}</h2>
+            <p>Tổng Số lượng</p>
         </div>
         <div class="card-box">
             <h2>{{ total_price}}</h2>
             <p>Tổng Giá Trị</p>
         </div>
-        <div class="card-box">
-            <h2>{{ total_price}}</h2>
-            <p>Tổng Số Lượng</p>
-        </div>
 
 
     </div>
 
-    <!-- Chào mừng -->
     <div class="welcome-box">
         <h2>Chào mừng đến với hệ thống quản lý sản phẩm</h2>
 
@@ -62,7 +142,6 @@ Dashboard
         </p>
     </div>
 
-    <!-- Bảng sản phẩm -->
     <div class="table-container">
 
         <h2>Sản phẩm </h2>
@@ -70,19 +149,103 @@ Dashboard
         <table>
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>Mã sản phẩm</th>
                     <th>Tên sản phẩm</th>
+                    <th>Hình ảnh</th>
                     <th>Danh mục</th>
                     <th>Giá</th>
                     <th>Số Lượng</th>
                 </tr>
             </thead>
-            </tbody>
+ <tbody>
 
-        </table>
+{% for product in products %}
+<tr>
+
+<td>{{ product[5] }}</td>
+
+<td>{{ product[1] }}</td>
+
+<td>
+    <img
+        src="{{ url_for('static',
+        filename='uploads/' + product[6]) }}"
+        width="60">
+</td>
+
+<td>{{ product[2] }}</td>
+
+<td>{{ product[3] }}</td>
+
+<td>{{ product[4] }}</td>
+ 
+<td>
+    <a href="#"
+       onclick="editProduct(
+       '{{ product[0] }}',
+       '{{ product[1] }}',
+       '{{ product[2] }}',
+       '{{ product[3] }}',
+       '{{ product[4] }}',
+       '{{ product[5] }}',
+       '{{ product[6] }}',
+       )">
+       ✏️ Sửa
+    </a>
+</td>
+    <td>
+        <a href="{{ url_for('delete_product', id=product[0]) }}"
+           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')"
+           class="delete-btn">
+            🗑️xóa
+        </a>
+    </td>
+</tr>
+
+</tbody>
+{% endfor %}
+    </tbody>
+
+</table>
 
     </div>
 
 </div>
+<script>
+function toggleForm() {
+
+    let form = document.getElementById("addProductForm");
+
+    if(form.style.display === "none"){
+        form.style.display = "block";
+    }else{
+        form.style.display = "none";
+    }
+
+}
+</script>
+<script>
+
+function editProduct(
+    id,
+    name,
+    category,
+    price,
+    quantity,
+    code,
+    image
+){
+
+    document.getElementById("editForm").style.display = "block";
+
+    document.getElementById("edit_id").value = id;
+    document.getElementById("edit_name").value = name;
+    document.getElementById("edit_category").value = category;
+    document.getElementById("edit_price").value = price;
+    document.getElementById("edit_quantity").value = quantity;
+    document.getElementById("edit_code").value = code;
+}
+
+</script>
 
 {% endblock %}
