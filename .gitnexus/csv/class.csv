@@ -1,0 +1,21 @@
+id,name,filePath,startLine,endLine,isExported,content,description
+"Class:models.py:User","User","models.py",2,6,true,"from app import db
+
+class User(db.Model):
+
+    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+
+",""
+"Class:models.py:Product","Product","models.py",7,11,true,"    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+
+    id=db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100),unique=True)
+    price =db.Column(db.Integer)
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+",""
