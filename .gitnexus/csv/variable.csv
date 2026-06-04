@@ -1,0 +1,134 @@
+id,name,filePath,startLine,endLine,content,description
+"Variable:app.py:app","app","app.py",3,3,"from flask import Flask, render_template, request, redirect
+
+app = Flask(__name__)
+def init_db():
+    conn = sqlite3.connect(""users.db"")
+",""
+"Variable:app.py:conn","conn","app.py",5,5,"app = Flask(__name__)
+def init_db():
+    conn = sqlite3.connect(""users.db"")
+    c = conn.cursor()
+
+",""
+"Variable:app.py:c","c","app.py",6,6,"def init_db():
+    conn = sqlite3.connect(""users.db"")
+    c = conn.cursor()
+
+    c.execute(""""""
+",""
+"Variable:app.py:users","users","app.py",21,21,"init_db()
+
+users = []
+@app.route('/')
+def home():
+",""
+"Variable:app.py:fullname","fullname","app.py",28,28,"def register():
+     if request.method == 'POST':
+        fullname = request.form[""fullname""]
+        username = request.form[""username""]
+        email = request.form[""email""]
+",""
+"Variable:app.py:username","username","app.py",29,29,"     if request.method == 'POST':
+        fullname = request.form[""fullname""]
+        username = request.form[""username""]
+        email = request.form[""email""]
+        password = request.form[""password""]
+",""
+"Variable:app.py:email","email","app.py",30,30,"        fullname = request.form[""fullname""]
+        username = request.form[""username""]
+        email = request.form[""email""]
+        password = request.form[""password""]
+        confirm = request.form[""confirm_password""]
+",""
+"Variable:app.py:password","password","app.py",31,31,"        username = request.form[""username""]
+        email = request.form[""email""]
+        password = request.form[""password""]
+        confirm = request.form[""confirm_password""]
+
+",""
+"Variable:app.py:confirm","confirm","app.py",32,32,"        email = request.form[""email""]
+        password = request.form[""password""]
+        confirm = request.form[""confirm_password""]
+
+        if password != confirm:
+",""
+"Variable:app.py:user","user","app.py",61,61,"
+         c.execute(""SELECT * FROM users WHERE email=? AND password=?"", (email, password))
+        user = c.fetchone()
+        if user:
+            return redirect(""/dashboard"")
+",""
+"Variable:app.py:products","products","app.py",71,71,"def dashboard():
+
+    products = []
+
+    return render_template(
+",""
+"Variable:app.py:keyword","keyword","app.py",81,81,"@app.route(""/products"")
+def products():
+    keyword = request.args.get(""keyword"", """")
+
+    return render_template(
+",""
+"Variable:models.py:id","id","models.py",4,4,"class User(db.Model):
+
+    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+",""
+"Variable:models.py:email","email","models.py",5,5,"
+    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+",""
+"Variable:models.py:password","password","models.py",6,6,"    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+
+",""
+"Variable:models.py:name","name","models.py",10,10,"
+    id=db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100),unique=True)
+    price =db.Column(db.Integer)
+class Product(db.Model):
+",""
+"Variable:models.py:price","price","models.py",11,11,"    id=db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100),unique=True)
+    price =db.Column(db.Integer)
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+",""
+"Variable:models.py:image","image","models.py",19,19,"    price = db.Column(db.Integer)
+
+    image = db.Column(db.String(300))
+
+    category = db.Column(db.String(100))
+",""
+"Variable:models.py:category","category","models.py",21,21,"    image = db.Column(db.String(300))
+
+    category = db.Column(db.String(100))
+    Quantity = db.Colimn(db.String(9999))",""
+"Variable:models.py:Quantity","Quantity","models.py",22,22,"
+    category = db.Column(db.String(100))
+    Quantity = db.Colimn(db.String(9999))",""
+"Variable:routes.py:app","app","routes.py",2,2,"from flask import Flask, render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+",""
+"Variable:routes.py:products","products","routes.py",20,20,"@app.route(""/dashboard"")
+def dashboard():
+     products = []
+
+     return render_template(
+",""
+"Variable:routes.py:keyword","keyword","routes.py",31,31,"def products():
+
+    keyword = request.args.get('keyword', '')
+
+    products = Product.query.filter(
+",""
