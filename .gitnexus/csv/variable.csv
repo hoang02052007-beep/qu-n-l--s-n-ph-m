@@ -1,75 +1,171 @@
 id,name,filePath,startLine,endLine,content,description
-"Variable:app.py:app","app","app.py",3,3,"from flask import Flask, render_template, request, redirect
-
+"Variable:app.py:app","app","app.py",4,4,"from flask import Flask, render_template, request, redirect,flash,url_for,session
+import os
 app = Flask(__name__)
+app.secret_key=""1234567""
 def init_db():
-    conn = sqlite3.connect(""users.db"")
 ",""
-"Variable:app.py:conn","conn","app.py",5,5,"app = Flask(__name__)
+"Variable:app.py:conn","conn","app.py",7,7,"app.secret_key=""1234567""
 def init_db():
     conn = sqlite3.connect(""users.db"")
     c = conn.cursor()
 
 ",""
-"Variable:app.py:c","c","app.py",6,6,"def init_db():
+"Variable:app.py:c","c","app.py",8,8,"def init_db():
     conn = sqlite3.connect(""users.db"")
     c = conn.cursor()
 
     c.execute(""""""
 ",""
-"Variable:app.py:users","users","app.py",21,21,"init_db()
+"Variable:app.py:users","users","app.py",44,44,"init_product_db()
 
 users = []
 @app.route('/')
 def home():
 ",""
-"Variable:app.py:fullname","fullname","app.py",28,28,"def register():
+"Variable:app.py:fullname","fullname","app.py",51,51,"def register():
      if request.method == 'POST':
         fullname = request.form[""fullname""]
         username = request.form[""username""]
         email = request.form[""email""]
 ",""
-"Variable:app.py:username","username","app.py",29,29,"     if request.method == 'POST':
+"Variable:app.py:username","username","app.py",52,52,"     if request.method == 'POST':
         fullname = request.form[""fullname""]
         username = request.form[""username""]
         email = request.form[""email""]
         password = request.form[""password""]
 ",""
-"Variable:app.py:email","email","app.py",30,30,"        fullname = request.form[""fullname""]
+"Variable:app.py:email","email","app.py",53,53,"        fullname = request.form[""fullname""]
         username = request.form[""username""]
         email = request.form[""email""]
         password = request.form[""password""]
         confirm = request.form[""confirm_password""]
 ",""
-"Variable:app.py:password","password","app.py",31,31,"        username = request.form[""username""]
+"Variable:app.py:password","password","app.py",54,54,"        username = request.form[""username""]
         email = request.form[""email""]
         password = request.form[""password""]
         confirm = request.form[""confirm_password""]
 
 ",""
-"Variable:app.py:confirm","confirm","app.py",32,32,"        email = request.form[""email""]
+"Variable:app.py:confirm","confirm","app.py",55,55,"        email = request.form[""email""]
         password = request.form[""password""]
         confirm = request.form[""confirm_password""]
 
         if password != confirm:
 ",""
-"Variable:app.py:user","user","app.py",61,61,"
+"Variable:app.py:user","user","app.py",84,84,"
          c.execute(""SELECT * FROM users WHERE email=? AND password=?"", (email, password))
         user = c.fetchone()
         if user:
-            return redirect(""/dashboard"")
+          session[""username""] = username
 ",""
-"Variable:app.py:products","products","app.py",71,71,"def dashboard():
-
-    products = []
-
-    return render_template(
-",""
-"Variable:app.py:keyword","keyword","app.py",81,81,"@app.route(""/products"")
-def products():
+"Variable:app.py:keyword","keyword","app.py",97,97,"    conn = sqlite3.connect(""products.db"")
+    c = conn.cursor()
     keyword = request.args.get(""keyword"", """")
+    category = request.args.get(""category"", """")
 
-    return render_template(
+",""
+"Variable:app.py:category","category","app.py",98,98,"    c = conn.cursor()
+    keyword = request.args.get(""keyword"", """")
+    category = request.args.get(""category"", """")
+
+    c.execute(""SELECT COUNT(DISTINCT category) FROM products"")
+",""
+"Variable:app.py:total_category","total_category","app.py",101,101,"
+    c.execute(""SELECT COUNT(DISTINCT category) FROM products"")
+    total_category = c.fetchone()[0]
+
+    c.execute(""SELECT SUM(price * quantity) FROM products"")
+",""
+"Variable:app.py:total_price","total_price","app.py",104,104,"
+    c.execute(""SELECT SUM(price * quantity) FROM products"")
+    total_price = c.fetchone()[0] or 0
+
+    c.execute(""SELECT SUM(quantity) FROM products"")
+",""
+"Variable:app.py:total_quantity","total_quantity","app.py",107,107,"
+    c.execute(""SELECT SUM(quantity) FROM products"")
+    total_quantity = c.fetchone()[0] or 0
+    if request.method == 'POST':
+
+",""
+"Variable:app.py:name","name","app.py",110,110,"    if request.method == 'POST':
+
+        name = request.form['name']
+        category = request.form['category']
+        price = request.form['price']
+",""
+"Variable:app.py:price","price","app.py",112,112,"        name = request.form['name']
+        category = request.form['category']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        code = request.form['code']
+",""
+"Variable:app.py:quantity","quantity","app.py",113,113,"        category = request.form['category']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        code = request.form['code']
+
+",""
+"Variable:app.py:code","code","app.py",114,114,"        price = request.form['price']
+        quantity = request.form['quantity']
+        code = request.form['code']
+
+        image = request.files['image']
+",""
+"Variable:app.py:image","image","app.py",116,116,"        code = request.form['code']
+
+        image = request.files['image']
+
+        filename = """"
+",""
+"Variable:app.py:filename","filename","app.py",118,118,"        image = request.files['image']
+
+        filename = """"
+
+        if image and image.filename != """":
+",""
+"Variable:app.py:sql","sql","app.py",145,145,"        return redirect(""/dashboard"")
+
+    sql = ""SELECT * FROM products WHERE 1=1""
+    params = []
+
+",""
+"Variable:app.py:params","params","app.py",146,146,"
+    sql = ""SELECT * FROM products WHERE 1=1""
+    params = []
+
+    if keyword:
+",""
+"Variable:app.py:products","products","app.py",157,157,"
+    c.execute(sql, params)
+    products = c.fetchall() 
+
+    total_products = len(products)
+",""
+"Variable:app.py:total_products","total_products","app.py",159,159,"    products = c.fetchall() 
+
+    total_products = len(products)
+    c.execute(""SELECT DISTINCT category FROM products"")
+    categories = c.fetchall()
+",""
+"Variable:app.py:categories","categories","app.py",161,161,"    total_products = len(products)
+    c.execute(""SELECT DISTINCT category FROM products"")
+    categories = c.fetchall()
+    conn.close()
+
+",""
+"Variable:app.py:id","id","app.py",186,186,"def update_product():
+
+    id = request.form[""id""]
+    name = request.form[""name""]
+    category = request.form[""category""]
+",""
+"Variable:app.py:old_image","old_image","app.py",201,201,"    )
+
+    old_image = c.fetchone()[0]
+
+    image = request.files[""image""]
 ",""
 "Variable:models.py:id","id","models.py",4,4,"class User(db.Model):
 
@@ -87,48 +183,399 @@ class Product(db.Model):
     email = db.Column(db.String(100),unique=True)
     password =db.Column(db.String(100),unique=True)
 class Product(db.Model):
-
-",""
-"Variable:models.py:name","name","models.py",10,10,"
-    id=db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100),unique=True)
-    price =db.Column(db.Integer)
-class Product(db.Model):
-",""
-"Variable:models.py:price","price","models.py",11,11,"    id=db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100),unique=True)
-    price =db.Column(db.Integer)
-class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 ",""
-"Variable:models.py:image","image","models.py",19,19,"    price = db.Column(db.Integer)
+"Variable:models.py:name","name","models.py",10,10,"    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(200), nullable=False)
+
+    price = db.Column(db.Interger)
+",""
+"Variable:models.py:price","price","models.py",12,12,"    name = db.Column(db.String(200), nullable=False)
+
+    price = db.Column(db.Interger)
+
+    image = db.Column(db.String(300))
+",""
+"Variable:models.py:image","image","models.py",14,14,"    price = db.Column(db.Interger)
 
     image = db.Column(db.String(300))
 
     category = db.Column(db.String(100))
 ",""
-"Variable:models.py:category","category","models.py",21,21,"    image = db.Column(db.String(300))
+"Variable:models.py:category","category","models.py",16,16,"    image = db.Column(db.String(300))
 
     category = db.Column(db.String(100))
-    Quantity = db.Colimn(db.String(9999))",""
-"Variable:models.py:Quantity","Quantity","models.py",22,22,"
-    category = db.Column(db.String(100))
-    Quantity = db.Colimn(db.String(9999))",""
-"Variable:routes.py:app","app","routes.py",2,2,"from flask import Flask, render_template
+    
+    quantity = db.Column(db.Interger)",""
+"Variable:models.py:quantity","quantity","models.py",18,18,"    category = db.Column(db.String(100))
+    
+    quantity = db.Column(db.Interger)",""
+"Variable:qu-n-l--s-n-ph-m/app.py:app","app","qu-n-l--s-n-ph-m/app.py",4,4,"from flask import Flask, render_template, request, redirect,flash,url_for,session
+import os
+app = Flask(__name__)
+app.secret_key=""1234567""
+def init_db():
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:conn","conn","qu-n-l--s-n-ph-m/app.py",7,7,"app.secret_key=""1234567""
+def init_db():
+    conn = sqlite3.connect(""users.db"")
+    c = conn.cursor()
 
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:c","c","qu-n-l--s-n-ph-m/app.py",8,8,"def init_db():
+    conn = sqlite3.connect(""users.db"")
+    c = conn.cursor()
+
+    c.execute(""""""
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:users","users","qu-n-l--s-n-ph-m/app.py",44,44,"init_product_db()
+
+users = []
+@app.route('/')
+def home():
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:fullname","fullname","qu-n-l--s-n-ph-m/app.py",51,51,"def register():
+     if request.method == 'POST':
+        fullname = request.form[""fullname""]
+        username = request.form[""username""]
+        email = request.form[""email""]
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:username","username","qu-n-l--s-n-ph-m/app.py",52,52,"     if request.method == 'POST':
+        fullname = request.form[""fullname""]
+        username = request.form[""username""]
+        email = request.form[""email""]
+        password = request.form[""password""]
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:email","email","qu-n-l--s-n-ph-m/app.py",53,53,"        fullname = request.form[""fullname""]
+        username = request.form[""username""]
+        email = request.form[""email""]
+        password = request.form[""password""]
+        confirm = request.form[""confirm_password""]
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:password","password","qu-n-l--s-n-ph-m/app.py",54,54,"        username = request.form[""username""]
+        email = request.form[""email""]
+        password = request.form[""password""]
+        confirm = request.form[""confirm_password""]
+
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:confirm","confirm","qu-n-l--s-n-ph-m/app.py",55,55,"        email = request.form[""email""]
+        password = request.form[""password""]
+        confirm = request.form[""confirm_password""]
+
+        if password != confirm:
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:user","user","qu-n-l--s-n-ph-m/app.py",84,84,"
+         c.execute(""SELECT * FROM users WHERE email=? AND password=?"", (email, password))
+        user = c.fetchone()
+        if user:
+          session[""username""] = username
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:keyword","keyword","qu-n-l--s-n-ph-m/app.py",97,97,"    conn = sqlite3.connect(""products.db"")
+    c = conn.cursor()
+    keyword = request.args.get(""keyword"", """")
+    category = request.args.get(""category"", """")
+
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:category","category","qu-n-l--s-n-ph-m/app.py",98,98,"    c = conn.cursor()
+    keyword = request.args.get(""keyword"", """")
+    category = request.args.get(""category"", """")
+
+    c.execute(""SELECT COUNT(DISTINCT category) FROM products"")
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:total_category","total_category","qu-n-l--s-n-ph-m/app.py",101,101,"
+    c.execute(""SELECT COUNT(DISTINCT category) FROM products"")
+    total_category = c.fetchone()[0]
+
+    c.execute(""SELECT SUM(price * quantity) FROM products"")
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:total_price","total_price","qu-n-l--s-n-ph-m/app.py",104,104,"
+    c.execute(""SELECT SUM(price * quantity) FROM products"")
+    total_price = c.fetchone()[0] or 0
+
+    c.execute(""SELECT SUM(quantity) FROM products"")
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:total_quantity","total_quantity","qu-n-l--s-n-ph-m/app.py",107,107,"
+    c.execute(""SELECT SUM(quantity) FROM products"")
+    total_quantity = c.fetchone()[0] or 0
+    if request.method == 'POST':
+
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:name","name","qu-n-l--s-n-ph-m/app.py",110,110,"    if request.method == 'POST':
+
+        name = request.form['name']
+        category = request.form['category']
+        price = request.form['price']
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:price","price","qu-n-l--s-n-ph-m/app.py",112,112,"        name = request.form['name']
+        category = request.form['category']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        code = request.form['code']
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:quantity","quantity","qu-n-l--s-n-ph-m/app.py",113,113,"        category = request.form['category']
+        price = request.form['price']
+        quantity = request.form['quantity']
+        code = request.form['code']
+
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:code","code","qu-n-l--s-n-ph-m/app.py",114,114,"        price = request.form['price']
+        quantity = request.form['quantity']
+        code = request.form['code']
+
+        image = request.files['image']
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:image","image","qu-n-l--s-n-ph-m/app.py",116,116,"        code = request.form['code']
+
+        image = request.files['image']
+
+        filename = """"
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:filename","filename","qu-n-l--s-n-ph-m/app.py",118,118,"        image = request.files['image']
+
+        filename = """"
+
+        if image and image.filename != """":
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:sql","sql","qu-n-l--s-n-ph-m/app.py",145,145,"        return redirect(""/dashboard"")
+
+    sql = ""SELECT * FROM products WHERE 1=1""
+    params = []
+
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:params","params","qu-n-l--s-n-ph-m/app.py",146,146,"
+    sql = ""SELECT * FROM products WHERE 1=1""
+    params = []
+
+    if keyword:
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:products","products","qu-n-l--s-n-ph-m/app.py",157,157,"
+    c.execute(sql, params)
+    products = c.fetchall() 
+
+    total_products = len(products)
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:total_products","total_products","qu-n-l--s-n-ph-m/app.py",159,159,"    products = c.fetchall() 
+
+    total_products = len(products)
+    c.execute(""SELECT DISTINCT category FROM products"")
+    categories = c.fetchall()
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:categories","categories","qu-n-l--s-n-ph-m/app.py",161,161,"    total_products = len(products)
+    c.execute(""SELECT DISTINCT category FROM products"")
+    categories = c.fetchall()
+    conn.close()
+
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:id","id","qu-n-l--s-n-ph-m/app.py",186,186,"def update_product():
+
+    id = request.form[""id""]
+    name = request.form[""name""]
+    category = request.form[""category""]
+",""
+"Variable:qu-n-l--s-n-ph-m/app.py:old_image","old_image","qu-n-l--s-n-ph-m/app.py",201,201,"    )
+
+    old_image = c.fetchone()[0]
+
+    image = request.files[""image""]
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:id","id","qu-n-l--s-n-ph-m/models.py",4,4,"class User(db.Model):
+
+    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:email","email","qu-n-l--s-n-ph-m/models.py",5,5,"
+    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:password","password","qu-n-l--s-n-ph-m/models.py",6,6,"    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:name","name","qu-n-l--s-n-ph-m/models.py",10,10,"    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(200), nullable=False)
+
+    price = db.Column(db.Interger)
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:price","price","qu-n-l--s-n-ph-m/models.py",12,12,"    name = db.Column(db.String(200), nullable=False)
+
+    price = db.Column(db.Interger)
+
+    image = db.Column(db.String(300))
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:image","image","qu-n-l--s-n-ph-m/models.py",14,14,"    price = db.Column(db.Interger)
+
+    image = db.Column(db.String(300))
+
+    category = db.Column(db.String(100))
+",""
+"Variable:qu-n-l--s-n-ph-m/models.py:category","category","qu-n-l--s-n-ph-m/models.py",16,16,"    image = db.Column(db.String(300))
+
+    category = db.Column(db.String(100))
+    
+    quantity = db.Column(db.Interger)",""
+"Variable:qu-n-l--s-n-ph-m/models.py:quantity","quantity","qu-n-l--s-n-ph-m/models.py",18,18,"    category = db.Column(db.String(100))
+    
+    quantity = db.Column(db.Interger)",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:app","app","qu-n-l--s-n-ph-m/routes.py",5,5,"from werkzeug.utils import secure_filename
+import os
 app = Flask(__name__)
 
 @app.route('/')
 ",""
-"Variable:routes.py:products","products","routes.py",20,20,"@app.route(""/dashboard"")
+"Variable:qu-n-l--s-n-ph-m/routes.py:conn","conn","qu-n-l--s-n-ph-m/routes.py",21,21,"@app.route('/dashboard')
 def dashboard():
-     products = []
+    conn = sqlite3.connect(""products.db"")
+    c = conn.cursor()
 
-     return render_template(
 ",""
-"Variable:routes.py:keyword","keyword","routes.py",31,31,"def products():
+"Variable:qu-n-l--s-n-ph-m/routes.py:c","c","qu-n-l--s-n-ph-m/routes.py",22,22,"def dashboard():
+    conn = sqlite3.connect(""products.db"")
+    c = conn.cursor()
+
+    c.execute(""SELECT * FROM products"")
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:products","products","qu-n-l--s-n-ph-m/routes.py",25,25,"
+    c.execute(""SELECT * FROM products"")
+    products = c.fetchall()
+
+    conn.close()
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:keyword","keyword","qu-n-l--s-n-ph-m/routes.py",35,35,"def products():
 
     keyword = request.args.get('keyword', '')
 
     products = Product.query.filter(
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:name","name","qu-n-l--s-n-ph-m/routes.py",52,52,"
+    if request.method == ""POST"":
+        name = request.form[""name""]
+        category = request.form[""category""]
+        price = request.form[""price""]
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:category","category","qu-n-l--s-n-ph-m/routes.py",53,53,"    if request.method == ""POST"":
+        name = request.form[""name""]
+        category = request.form[""category""]
+        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:price","price","qu-n-l--s-n-ph-m/routes.py",54,54,"        name = request.form[""name""]
+        category = request.form[""category""]
+        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+        code = request.form[""code""]
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:quantity","quantity","qu-n-l--s-n-ph-m/routes.py",55,55,"        category = request.form[""category""]
+        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+        code = request.form[""code""]
+
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:code","code","qu-n-l--s-n-ph-m/routes.py",56,56,"        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+        code = request.form[""code""]
+
+        image = request.files[""image""]
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:image","image","qu-n-l--s-n-ph-m/routes.py",58,58,"        code = request.form[""code""]
+
+        image = request.files[""image""]
+
+        if image and image.filename != """":
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:filename","filename","qu-n-l--s-n-ph-m/routes.py",61,61,"
+        if image and image.filename != """":
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(""static/uploads"", filename))
+
+",""
+"Variable:qu-n-l--s-n-ph-m/routes.py:product","product","qu-n-l--s-n-ph-m/routes.py",82,82,"
+    c.execute(""SELECT * FROM products WHERE id=?"", (id,))
+    product = c.fetchone()
+
+    conn.close()
+",""
+"Variable:routes.py:app","app","routes.py",5,5,"from werkzeug.utils import secure_filename
+import os
+app = Flask(__name__)
+
+@app.route('/')
+",""
+"Variable:routes.py:conn","conn","routes.py",21,21,"@app.route('/dashboard')
+def dashboard():
+    conn = sqlite3.connect(""products.db"")
+    c = conn.cursor()
+
+",""
+"Variable:routes.py:c","c","routes.py",22,22,"def dashboard():
+    conn = sqlite3.connect(""products.db"")
+    c = conn.cursor()
+
+    c.execute(""SELECT * FROM products"")
+",""
+"Variable:routes.py:products","products","routes.py",25,25,"
+    c.execute(""SELECT * FROM products"")
+    products = c.fetchall()
+
+    conn.close()
+",""
+"Variable:routes.py:keyword","keyword","routes.py",35,35,"def products():
+
+    keyword = request.args.get('keyword', '')
+
+    products = Product.query.filter(
+",""
+"Variable:routes.py:name","name","routes.py",52,52,"
+    if request.method == ""POST"":
+        name = request.form[""name""]
+        category = request.form[""category""]
+        price = request.form[""price""]
+",""
+"Variable:routes.py:category","category","routes.py",53,53,"    if request.method == ""POST"":
+        name = request.form[""name""]
+        category = request.form[""category""]
+        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+",""
+"Variable:routes.py:price","price","routes.py",54,54,"        name = request.form[""name""]
+        category = request.form[""category""]
+        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+        code = request.form[""code""]
+",""
+"Variable:routes.py:quantity","quantity","routes.py",55,55,"        category = request.form[""category""]
+        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+        code = request.form[""code""]
+
+",""
+"Variable:routes.py:code","code","routes.py",56,56,"        price = request.form[""price""]
+        quantity = request.form[""quantity""]
+        code = request.form[""code""]
+
+        image = request.files[""image""]
+",""
+"Variable:routes.py:image","image","routes.py",58,58,"        code = request.form[""code""]
+
+        image = request.files[""image""]
+
+        if image and image.filename != """":
+",""
+"Variable:routes.py:filename","filename","routes.py",61,61,"
+        if image and image.filename != """":
+            filename = secure_filename(image.filename)
+            image.save(os.path.join(""static/uploads"", filename))
+
+",""
+"Variable:routes.py:product","product","routes.py",82,82,"
+    c.execute(""SELECT * FROM products WHERE id=?"", (id,))
+    product = c.fetchone()
+
+    conn.close()
 ",""

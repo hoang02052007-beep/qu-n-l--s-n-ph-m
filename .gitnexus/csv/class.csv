@@ -7,15 +7,43 @@ class User(db.Model):
     email = db.Column(db.String(100),unique=True)
     password =db.Column(db.String(100),unique=True)
 class Product(db.Model):
-
+    id = db.Column(db.Integer, primary_key=True)
 ",""
-"Class:models.py:Product","Product","models.py",7,11,true,"    email = db.Column(db.String(100),unique=True)
+"Class:models.py:Product","Product","models.py",7,18,true,"    email = db.Column(db.String(100),unique=True)
     password =db.Column(db.String(100),unique=True)
 class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(200), nullable=False)
+
+    price = db.Column(db.Interger)
+
+    image = db.Column(db.String(300))
+
+    category = db.Column(db.String(100))
+    
+    quantity = db.Column(db.Interger)",""
+"Class:qu-n-l--s-n-ph-m/models.py:User","User","qu-n-l--s-n-ph-m/models.py",2,6,true,"from app import db
+
+class User(db.Model):
 
     id=db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100),unique=True)
-    price =db.Column(db.Integer)
+    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 ",""
+"Class:qu-n-l--s-n-ph-m/models.py:Product","Product","qu-n-l--s-n-ph-m/models.py",7,18,true,"    email = db.Column(db.String(100),unique=True)
+    password =db.Column(db.String(100),unique=True)
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+    name = db.Column(db.String(200), nullable=False)
+
+    price = db.Column(db.Interger)
+
+    image = db.Column(db.String(300))
+
+    category = db.Column(db.String(100))
+    
+    quantity = db.Column(db.Interger)",""
